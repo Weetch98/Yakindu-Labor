@@ -529,7 +529,7 @@ graph
 				text	"
 	specification = null
 	namespace = null
-	name = Game Over
+	name = State1
 	documentation = 
 	orthogonal = false
 	simple = true
