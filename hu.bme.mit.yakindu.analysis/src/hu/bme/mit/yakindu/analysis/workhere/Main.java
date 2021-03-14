@@ -1,5 +1,7 @@
 package hu.bme.mit.yakindu.analysis.workhere;
 
+import java.util.ArrayList;
+
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
 import org.junit.Test;
@@ -60,6 +62,35 @@ public class Main {
 			}
 		}
 		
+		// Finding states without a name and suggesting a name
+		int stateIndex = 1;
+		
+		ArrayList<String> state_names = new ArrayList<String>();
+		ArrayList<State> noname_states = new ArrayList<State>();
+		
+		iterator = s.eAllContents();
+		while (iterator.hasNext()) {
+			EObject content = iterator.next();
+			if(content instanceof State) {
+				State state = (State) content;
+				if(state.getName() == "") {
+					noname_states.add(state);
+				}else {
+					state_names.add(state.getName());
+				}
+			}
+		}
+		
+		for(State state : noname_states) {
+			System.out.println("State found with no name: "+state.toString());
+			String suggested = "State"+stateIndex;
+			
+			while(state_names.contains(suggested)) {
+				suggested = "State" + ++stateIndex;
+			}
+			
+			System.out.println("Suggested name: "+suggested);
+		}
 		
 		// Transforming the model into a graph representation
 		String content = model2gml.transform(root);

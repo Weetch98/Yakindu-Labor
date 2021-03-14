@@ -178,7 +178,7 @@ graph
 				text	"
 	specification = null
 	namespace = null
-	name = Init
+	name = 
 	documentation = 
 	orthogonal = false
 	simple = true
