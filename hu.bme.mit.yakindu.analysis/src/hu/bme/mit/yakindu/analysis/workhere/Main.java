@@ -48,6 +48,19 @@ public class Main {
 			}
 		}
 		
+		// Reading model trap states
+		iterator = s.eAllContents();
+		while (iterator.hasNext()) {
+			EObject content = iterator.next();
+			if(content instanceof State) {
+				State state = (State) content;
+				if(state.getOutgoingTransitions().isEmpty()) {
+					System.out.println("Trap: "+state.getName());
+				}
+			}
+		}
+		
+		
 		// Transforming the model into a graph representation
 		String content = model2gml.transform(root);
 		// and saving it
