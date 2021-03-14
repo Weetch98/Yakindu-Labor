@@ -5,6 +5,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.junit.Test;
 import org.yakindu.sct.model.sgraph.State;
 import org.yakindu.sct.model.sgraph.Statechart;
+import org.yakindu.sct.model.sgraph.Transition;
+import org.yakindu.sct.model.sgraph.Vertex;
 
 import hu.bme.mit.model2gml.Model2GML;
 import hu.bme.mit.yakindu.analysis.modelmanager.ModelManager;
@@ -22,7 +24,7 @@ public class Main {
 		// Loading model
 		EObject root = manager.loadModel("model_input/example.sct");
 		
-		// Reading model
+		// Reading model states
 		Statechart s = (Statechart) root;
 		TreeIterator<EObject> iterator = s.eAllContents();
 		while (iterator.hasNext()) {
@@ -30,6 +32,19 @@ public class Main {
 			if(content instanceof State) {
 				State state = (State) content;
 				System.out.println(state.getName());
+			}
+
+		}
+		
+		// Reading model transitions
+		iterator = s.eAllContents();
+		while (iterator.hasNext()) {
+			EObject content = iterator.next();
+			if(content instanceof Transition) {
+				Transition trans = (Transition) content;
+				Vertex source = trans.getSource();
+				Vertex target = trans.getTarget();
+				System.out.println(source.getName() + " -> " + target.getName());
 			}
 		}
 		
