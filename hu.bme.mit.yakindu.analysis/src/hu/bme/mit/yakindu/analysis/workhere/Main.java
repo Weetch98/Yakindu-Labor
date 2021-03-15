@@ -21,16 +21,9 @@ public class Main {
 	public void test() {
 		main(new String[0]);
 	}
-	
-	public static void main(String[] args) {
-		ModelManager manager = new ModelManager();
-		Model2GML model2gml = new Model2GML();
-		
-		// Loading model
-		EObject root = manager.loadModel("model_input/example.sct");
-		
+
+	public static void readModelStates(Statechart s) {
 		// Reading model states
-		Statechart s = (Statechart) root;
 		TreeIterator<EObject> iterator = s.eAllContents();
 		while (iterator.hasNext()) {
 			EObject content = iterator.next();
@@ -38,11 +31,13 @@ public class Main {
 				State state = (State) content;
 				System.out.println(state.getName());
 			}
-
 		}
-		
+	}
+	
+	//Task 2.3 solution:
+	public static void readModelTransitions(Statechart s) {
 		// Reading model transitions
-		iterator = s.eAllContents();
+		TreeIterator<EObject> iterator = s.eAllContents();
 		while (iterator.hasNext()) {
 			EObject content = iterator.next();
 			if(content instanceof Transition) {
@@ -52,9 +47,12 @@ public class Main {
 				System.out.println(source.getName() + " -> " + target.getName());
 			}
 		}
-		
+	}
+	
+	//Task 2.4 solution:
+	public static void readModelTrapStates(Statechart s) {
 		// Reading model trap states
-		iterator = s.eAllContents();
+		TreeIterator<EObject> iterator = s.eAllContents();
 		while (iterator.hasNext()) {
 			EObject content = iterator.next();
 			if(content instanceof State) {
@@ -64,14 +62,17 @@ public class Main {
 				}
 			}
 		}
-		
+	}
+	
+	//Task 2.5 solution:
+	public static void findNoNameStates(Statechart s) {
 		// Finding states without a name and suggesting a name
 		int stateIndex = 1;
-		
+				
 		ArrayList<String> state_names = new ArrayList<String>();
 		ArrayList<State> noname_states = new ArrayList<State>();
-		
-		iterator = s.eAllContents();
+				
+		TreeIterator<EObject> iterator = s.eAllContents();
 		while (iterator.hasNext()) {
 			EObject content = iterator.next();
 			if(content instanceof State) {
@@ -83,20 +84,23 @@ public class Main {
 				}
 			}
 		}
-		
+				
 		for(State state : noname_states) {
 			System.out.println("State found with no name: "+state.toString());
 			String suggested = "State"+stateIndex;
-			
+					
 			while(state_names.contains(suggested)) {
 				suggested = "State" + ++stateIndex;
 			}
-			
+					
 			System.out.println("Suggested name: "+suggested);
 		}
-		
+	}
+	
+	//Task 3.5 solution:
+	public static void readModelVariables(Statechart s) {
 		// Reading model variables
-		iterator = s.eAllContents();
+		TreeIterator<EObject> iterator = s.eAllContents();
 		while (iterator.hasNext()) {
 			EObject content = iterator.next();
 			if(content instanceof VariableDefinition) {
@@ -105,9 +109,12 @@ public class Main {
 				System.out.println("Var: "+name);
 			}
 		}
-		
+	}
+	
+	//Task 3.5 solution:
+	public static void readModelInEvents(Statechart s) {
 		// Reading model in events
-		iterator = s.eAllContents();
+		TreeIterator<EObject> iterator = s.eAllContents();
 		while (iterator.hasNext()) {
 			EObject content = iterator.next();
 			if(content instanceof EventDefinition) {
@@ -118,7 +125,18 @@ public class Main {
 				}
 			}
 		}
+	}
+
+	public static void main(String[] args) {
+		ModelManager manager = new ModelManager();
+		Model2GML model2gml = new Model2GML();
+		
+		// Loading model
+		EObject root = manager.loadModel("model_input/example.sct");
+		Statechart s = (Statechart) root;
 				
+		readModelVariables(s);
+		readModelInEvents(s);
 		
 		// Transforming the model into a graph representation
 		String content = model2gml.transform(root);
