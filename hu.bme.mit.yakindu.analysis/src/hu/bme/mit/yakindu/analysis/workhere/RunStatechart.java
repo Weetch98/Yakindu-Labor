@@ -51,7 +51,6 @@ public class RunStatechart {
 	
 	//Task 3.5 solution:
 	public static void inputListenerV2(IExampleStatemachine s) throws IOException {
-		
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		
 		while(true) {
@@ -60,6 +59,9 @@ public class RunStatechart {
 			
 			if(input.toLowerCase().equals("exit")) {
 				return;
+			}
+			if(input.toLowerCase().equals("start")) {
+				s.getSCInterface().raiseStart();
 			}
 			
 			if(input.toLowerCase().equals("white")) {
@@ -70,14 +72,14 @@ public class RunStatechart {
 				s.getSCInterface().raiseBlack();
 			}
 			
-			if(input.toLowerCase().equals("start")) {
-				s.getSCInterface().raiseStart();
+			if(input.toLowerCase().equals("stop")) {
+				s.getSCInterface().raiseStop();
 			}
 			
-			print(s);
-			
+			System.out.println("p = " + s.getSCInterface().getPlayers());
+			System.out.println("w = " + s.getSCInterface().getWhiteTime());
+			System.out.println("b = " + s.getSCInterface().getBlackTime());
 		}
-		
 	}
 
 	
@@ -88,7 +90,7 @@ public class RunStatechart {
 		s.init();
 		s.enter();
 		s.runCycle();
-		inputListener(s);
+		inputListenerV2(s);
 		System.exit(0);
 		
 	}

@@ -188,7 +188,7 @@ public class Main {
 			if(content instanceof VariableDefinition) {
 				VariableDefinition var = (VariableDefinition)content;
 				
-				String name = var.getName();
+				String name = var.getName().substring(0, 1).toUpperCase()+var.getName().substring(1);
 				char firstLetter = var.getName().charAt(0);
 				
 				code += "		System.out.println(\""+firstLetter+" = \" + s.getSCInterface().get"+name+"());\n";
