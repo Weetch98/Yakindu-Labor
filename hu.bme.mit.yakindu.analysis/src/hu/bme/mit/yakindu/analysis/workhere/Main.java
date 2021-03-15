@@ -97,7 +97,7 @@ public class Main {
 		}
 	}
 	
-	//Task 3.5 solution:
+	//Task 4.3 solution:
 	public static void readModelVariables(Statechart s) {
 		// Reading model variables
 		TreeIterator<EObject> iterator = s.eAllContents();
@@ -111,7 +111,7 @@ public class Main {
 		}
 	}
 	
-	//Task 3.5 solution:
+	//Task 4.3 solution:
 	public static void readModelInEvents(Statechart s) {
 		// Reading model in events
 		TreeIterator<EObject> iterator = s.eAllContents();
@@ -126,6 +126,79 @@ public class Main {
 			}
 		}
 	}
+	
+	//Task 4.4 solution:
+	public static void variablesToSource(Statechart s) {
+		// Reading model variables and printing them in given format.
+		
+		//Function header
+		System.out.println("public static void print(IExampleStatemachine s){");
+		
+		TreeIterator<EObject> iterator = s.eAllContents();
+		while (iterator.hasNext()) {
+			EObject content = iterator.next();
+			if(content instanceof VariableDefinition) {
+				VariableDefinition var = (VariableDefinition)content;
+				
+				String name = var.getName();
+				char firstLetter = var.getName().charAt(0);
+				
+				System.out.println("System.out.println(\""+firstLetter+" = \" + s.getSCInterface().get"+name+"());");
+			}
+		}
+		
+		//End of function
+		System.out.println("}");
+	}
+	
+	//Task 4.5 solution:
+	public static void codeGenerator(Statechart s) {
+		
+		String code = "public static void inputListener(IExampleStatemachine s) throws IOException {\n"+
+				"	BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));\n" + 
+				"	\n" + 
+				"	while(true) {\n" + 
+				"		\n" + 
+				"		String input = reader.readLine();\n" + 
+				"		\n" + 
+				"		if(input.toLowerCase().equals(\"exit\")) {\n" + 
+				"			return;\n" + 
+				"		}\n";
+		
+		TreeIterator<EObject> iterator = s.eAllContents();
+		while (iterator.hasNext()) {
+			EObject content = iterator.next();
+			if(content instanceof EventDefinition) {
+				EventDefinition event = (EventDefinition)content;
+				if(event.getDirection() == Direction.IN) {
+					String name = event.getName();
+					String name_upper = name.substring(0, 1).toUpperCase()+name.substring(1);
+					
+					code += "		if(input.toLowerCase().equals(\"" + name.toLowerCase() + "\")) {\n" + 
+							"			s.getSCInterface().raise" + name_upper + "();\n" + 
+							"		}\n" +
+							"		\n";
+				}
+			}
+		}
+		
+		iterator = s.eAllContents();
+		while (iterator.hasNext()) {
+			EObject content = iterator.next();
+			if(content instanceof VariableDefinition) {
+				VariableDefinition var = (VariableDefinition)content;
+				
+				String name = var.getName();
+				char firstLetter = var.getName().charAt(0);
+				
+				code += "		System.out.println(\""+firstLetter+" = \" + s.getSCInterface().get"+name+"());\n";
+			}
+		}
+		code += "	}\n" +
+				"}";
+		
+		System.out.println(code);
+	}
 
 	public static void main(String[] args) {
 		ModelManager manager = new ModelManager();
@@ -135,8 +208,7 @@ public class Main {
 		EObject root = manager.loadModel("model_input/example.sct");
 		Statechart s = (Statechart) root;
 				
-		readModelVariables(s);
-		readModelInEvents(s);
+		codeGenerator(s);
 		
 		// Transforming the model into a graph representation
 		String content = model2gml.transform(root);

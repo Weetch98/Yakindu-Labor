@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 
 import hu.bme.mit.yakindu.analysis.RuntimeService;
 import hu.bme.mit.yakindu.analysis.TimerService;
@@ -14,6 +13,8 @@ import hu.bme.mit.yakindu.analysis.example.IExampleStatemachine;
 
 public class RunStatechart {
 	
+	
+	//Task 3.5 solution:
 	public static void inputListener(IExampleStatemachine s) throws IOException {
 		
 		Method[] smethods = s.getSCInterface().getClass().getMethods();
@@ -45,8 +46,40 @@ public class RunStatechart {
 				}
 			}
 			print(s);
+		}
 	}
-}
+	
+	//Task 3.5 solution:
+	public static void inputListenerV2(IExampleStatemachine s) throws IOException {
+		
+		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+		
+		while(true) {
+			
+			String input = reader.readLine();
+			
+			if(input.toLowerCase().equals("exit")) {
+				return;
+			}
+			
+			if(input.toLowerCase().equals("white")) {
+				s.getSCInterface().raiseWhite();
+			}
+			
+			if(input.toLowerCase().equals("black")) {
+				s.getSCInterface().raiseBlack();
+			}
+			
+			if(input.toLowerCase().equals("start")) {
+				s.getSCInterface().raiseStart();
+			}
+			
+			print(s);
+			
+		}
+		
+	}
+
 	
 	public static void main(String[] args) throws IOException {
 		ExampleStatemachine s = new ExampleStatemachine();
