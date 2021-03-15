@@ -5,10 +5,13 @@ import java.util.ArrayList;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
 import org.junit.Test;
+import org.yakindu.base.types.Direction;
 import org.yakindu.sct.model.sgraph.State;
 import org.yakindu.sct.model.sgraph.Statechart;
 import org.yakindu.sct.model.sgraph.Transition;
 import org.yakindu.sct.model.sgraph.Vertex;
+import org.yakindu.sct.model.stext.stext.EventDefinition;
+import org.yakindu.sct.model.stext.stext.VariableDefinition;
 
 import hu.bme.mit.model2gml.Model2GML;
 import hu.bme.mit.yakindu.analysis.modelmanager.ModelManager;
@@ -91,6 +94,31 @@ public class Main {
 			
 			System.out.println("Suggested name: "+suggested);
 		}
+		
+		// Reading model variables
+		iterator = s.eAllContents();
+		while (iterator.hasNext()) {
+			EObject content = iterator.next();
+			if(content instanceof VariableDefinition) {
+				VariableDefinition var = (VariableDefinition)content;
+				String name = var.getName();
+				System.out.println("Var: "+name);
+			}
+		}
+		
+		// Reading model in events
+		iterator = s.eAllContents();
+		while (iterator.hasNext()) {
+			EObject content = iterator.next();
+			if(content instanceof EventDefinition) {
+				EventDefinition event = (EventDefinition)content;
+				if(event.getDirection() == Direction.IN) {
+					String name = event.getName();
+					System.out.println("In event: "+name);
+				}
+			}
+		}
+				
 		
 		// Transforming the model into a graph representation
 		String content = model2gml.transform(root);
